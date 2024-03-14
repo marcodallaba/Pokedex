@@ -9,6 +9,10 @@ jobs:
   check:
     name: Static analysis
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout code
@@ -30,10 +34,6 @@ jobs:
 
       - name: Upload SARIF to Github using the upload-sarif action
         uses: github/codeql-action/upload-sarif@v2
-        permissions:
-          actions: read
-          contents: read
-          security-events: write
         if: ${{ always() }}
         with:
           sarif_file: app/build/reports/sarif/
