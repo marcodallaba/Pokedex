@@ -113,6 +113,8 @@ tasks {
             val detektRelease by getting(Detekt::class)
             val androidLintReportRelease = named<AndroidLintTask>("lintReportRelease")
 
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
             mustRunAfter(detekt, detektRelease, androidLintReportRelease, lintKotlin, staticAnalysis)
 
             from(detektRelease.sarifReportFile) {
