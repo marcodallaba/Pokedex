@@ -48,3 +48,11 @@ P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 w
 G.idea/sonarlint/issuestore/d/b/dbcff70658daf80b53ce624f6adcaa529df5ed8d,5/9/597ee72a8e9f089a0f26608d0d77229bc4510a37
+G
+build-config/detekt.yml,5/6/5616330962e15a13e6c05af26894a2dbfe2264ac
+E
+build-config/lint.xml,9/b/9bfc9a3327e73cc6039f7229ab956fa8eeb4dba9
+R
+".github/workflows/dependencies.yml,8/3/8375eac5644da2e96802b61ac29d70e80b14599d
+N
+.github/workflows/buildbot.yml,b/9/b99a1676a69ed3611ea98046b164627d77159918

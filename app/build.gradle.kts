@@ -1,6 +1,11 @@
+import com.android.build.gradle.internal.lint.AndroidLintTask
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kotlinter)
 }
 
 android {
@@ -42,11 +47,22 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+    lint {
+        lintConfig = rootProject.file("build-config/lint.xml")
+        //isWarningsAsErrors = true
+        sarifReport = true
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+detekt {
+    source.setFrom(files("src/main/java", "src/main/kotlin"))
+    config.setFrom(files("build-config/detekt.yml"))
+    buildUponDefaultConfig = true
 }
 
 dependencies {
@@ -66,4 +82,57 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+tasks {
+    val detekt = withType<Detekt> {
+        // Required for type resolution
+        jvmTarget = "1.8"
+        reports {
+            sarif {
+                required.set(true)
+            }
+        }
+    }
+
+    val lintReportReleaseSarifOutput = project.layout.buildDirectory.file("reports/sarif/lint-results-release.sarif")
+    afterEvaluate {
+        // Needs to be in afterEvaluate because it's not created yet otherwise
+        named<AndroidLintTask>("lintReportRelease") {
+            sarifReportOutputFile.set(lintReportReleaseSarifOutput)
+        }
+
+        val staticAnalysis by registering {
+            val detektRelease by getting(Detekt::class)
+            val androidLintReportRelease = named<AndroidLintTask>("lintReportRelease")
+
+            dependsOn(detekt, detektRelease, androidLintReportRelease, lintKotlin)
+        }
+
+        register<Sync>("collectSarifReports") {
+            val detektRelease by getting(Detekt::class)
+            val androidLintReportRelease = named<AndroidLintTask>("lintReportRelease")
+
+            mustRunAfter(detekt, detektRelease, androidLintReportRelease, lintKotlin, staticAnalysis)
+
+            from(detektRelease.sarifReportFile) {
+                rename { "detekt-release.sarif" }
+            }
+            detekt.forEach {
+                from(it.sarifReportFile) {
+                    rename { "detekt.sarif" }
+                }
+            }
+            from(lintReportReleaseSarifOutput) {
+                rename { "android-lint.sarif" }
+            }
+
+            into("${layout.buildDirectory}/reports/sarif")
+
+            doLast {
+                logger.info("Copied ${inputs.files.files.filter { it.exists() }} into ${outputs.files.files}")
+                logger.info("Output dir contents:\n${outputs.files.files.first().listFiles()?.joinToString()}")
+            }
+        }
+    }
 }
