@@ -61,7 +61,7 @@ android {
 
 detekt {
     source.setFrom(files("src/main/java", "src/main/kotlin"))
-    config.setFrom(files("build-config/detekt.yml"))
+    config.setFrom(rootProject.file("build-config/detekt.yml"))
     buildUponDefaultConfig = true
 }
 
