@@ -32,12 +32,6 @@ jobs:
         with:
           arguments: app:staticAnalysis app:collectSarifReports --continue
 
-      - name: Upload SARIF to Github using the upload-sarif action
-        uses: github/codeql-action/upload-sarif@v2
-        if: ${{ always() }}
-        with:
-          sarif_file: app/build/reports/sarif/
-
   test:
     name: Run unit tests
     runs-on: ubuntu-latest
