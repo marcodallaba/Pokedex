@@ -34,3 +34,4 @@ dependencyResolutionManagement {
 rootProject.name = "Pokedex"
 include(":app")
 include(":network")
+include(":model")
