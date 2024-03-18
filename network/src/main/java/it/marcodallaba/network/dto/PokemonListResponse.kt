@@ -3,7 +3,7 @@ package it.marcodallaba.network.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class PokemonList(
+data class PokemonListResponse(
     @SerializedName("count")
     val count: Int,
     @SerializedName("next")
