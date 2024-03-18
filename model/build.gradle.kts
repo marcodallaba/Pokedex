@@ -34,4 +34,8 @@ android {
 
 dependencies {
     api(libs.timber)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
