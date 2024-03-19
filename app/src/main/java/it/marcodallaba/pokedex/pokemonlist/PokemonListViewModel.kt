@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.marcodallaba.data.repository.PokemonRepositoryImpl
+import it.marcodallaba.data.repository.PokemonRepository
 import it.marcodallaba.data.util.Resource
 import it.marcodallaba.model.PokemonListEntry
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-    private val repository: PokemonRepositoryImpl,
+    private val repository: PokemonRepository,
 ) : ViewModel() {
 
     private var curPage = 0
