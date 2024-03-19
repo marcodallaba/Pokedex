@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
-import it.marcodallaba.data.util.Resource
+import it.marcodallaba.data.util.Result
 import it.marcodallaba.model.PokemonInfo
 import it.marcodallaba.pokedex.R
 import it.marcodallaba.pokedex.util.parseStatToAbbr
@@ -67,7 +67,7 @@ fun PokemonDetailScreen(
     pokemonImageSize: Dp = 200.dp,
     viewModel: PokemonDetailViewModel = hiltViewModel(),
 ) {
-    val pokemonInfo = produceState<Resource<PokemonInfo>>(initialValue = Resource.Loading()) {
+    val pokemonInfo = produceState<Result<PokemonInfo>>(initialValue = Result.Loading) {
         value = viewModel.getPokemonInfo(pokemonName)
     }.value
     Box(
@@ -112,8 +112,8 @@ fun PokemonDetailScreen(
             contentAlignment = Alignment.TopCenter,
             modifier = Modifier.fillMaxSize(),
         ) {
-            if (pokemonInfo is Resource.Success) {
-                pokemonInfo.data?.let {
+            if (pokemonInfo is Result.Success) {
+                pokemonInfo.data.let {
                     SubcomposeAsyncImage(
                         model = it.frontImageDefaultUrl,
                         contentDescription = it.name,
@@ -159,27 +159,27 @@ fun PokemonDetailTopSection(
 
 @Composable
 fun PokemonDetailStateWrapper(
-    pokemonInfo: Resource<PokemonInfo>,
+    pokemonInfo: Result<PokemonInfo>,
     modifier: Modifier = Modifier,
     loadingModifier: Modifier = Modifier,
 ) {
     when (pokemonInfo) {
-        is Resource.Success -> {
+        is Result.Success -> {
             PokemonDetailSection(
-                pokemonInfo = pokemonInfo.data!!,
+                pokemonInfo = pokemonInfo.data,
                 modifier = modifier.offset(y = (-20).dp),
             )
         }
 
-        is Resource.Error -> {
+        is Result.Error -> {
             Text(
-                text = pokemonInfo.message!!,
+                text = pokemonInfo.exception.localizedMessage.orEmpty(),
                 color = Color.Red,
                 modifier = modifier,
             )
         }
 
-        is Resource.Loading -> {
+        is Result.Loading -> {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = loadingModifier,

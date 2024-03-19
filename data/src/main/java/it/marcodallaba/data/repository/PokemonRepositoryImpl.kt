@@ -3,7 +3,7 @@ package it.marcodallaba.data.repository
 import dagger.hilt.android.scopes.ActivityScoped
 import it.marcodallaba.common.network.Dispatcher
 import it.marcodallaba.common.network.PokedexDispatchers
-import it.marcodallaba.data.util.Resource
+import it.marcodallaba.data.util.Result
 import it.marcodallaba.model.PokemonInfo
 import it.marcodallaba.model.PokemonListEntry
 import it.marcodallaba.network.service.PokedexClient
@@ -21,28 +21,28 @@ class PokemonRepositoryImpl(
 
     override suspend fun getPokemonListEntry(
         page: Int,
-    ): Resource<Pair<List<PokemonListEntry>, LastPage>> {
+    ): Result<Pair<List<PokemonListEntry>, LastPage>> {
         return withContext(ioDispatcher) {
             val response = try {
                 pokedexClient.fetchPokemonList(page)
             } catch (e: Exception) {
-                return@withContext Resource.Error("An exception has occurred")
+                return@withContext Result.Error(e)
             }
-            return@withContext Resource.Success(Pair(response.toModel(), response.next == null))
+            return@withContext Result.Success(Pair(response.toModel(), response.next == null))
         }
     }
 
 
     override suspend fun getPokemonInfo(
         pokemonName: String,
-    ): Resource<PokemonInfo> {
+    ): Result<PokemonInfo> {
         return withContext(ioDispatcher) {
             val response = try {
                 pokedexClient.fetchPokemonInfo(pokemonName)
             } catch (e: Exception) {
-                return@withContext Resource.Error("An exception has occurred")
+                return@withContext Result.Error(e)
             }
-            return@withContext Resource.Success(response.toModel())
+            return@withContext Result.Success(response.toModel())
         }
     }
 }

@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.marcodallaba.data.repository.PokemonRepository
-import it.marcodallaba.data.util.Resource
+import it.marcodallaba.data.util.Result
 import it.marcodallaba.model.PokemonListEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,21 +65,21 @@ class PokemonListViewModel @Inject constructor(
         viewModelScope.launch {
             isLoading.value = true
             when (val result = repository.getPokemonListEntry(curPage)) {
-                is Resource.Success -> {
-                    endReached.value = result.data?.second == true
-                    val pokedexEntries = result.data?.first.orEmpty()
+                is Result.Success -> {
+                    endReached.value = result.data.second
+                    val pokedexEntries = result.data.first
                     curPage++
                     loadError.value = ""
                     isLoading.value = false
                     pokemonList.value += pokedexEntries
                 }
 
-                is Resource.Error -> {
-                    loadError.value = result.message!!
+                is Result.Error -> {
+                    loadError.value = result.exception.localizedMessage.orEmpty()
                     isLoading.value = false
                 }
 
-                is Resource.Loading -> {
+                is Result.Loading -> {
                 }
             }
         }
