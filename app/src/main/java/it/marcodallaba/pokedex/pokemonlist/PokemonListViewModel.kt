@@ -67,7 +67,7 @@ class PokemonListViewModel @Inject constructor(
             when (val result = repository.getPokemonListEntry(curPage)) {
                 is Resource.Success -> {
                     endReached.value = result.data?.second == true
-                    val pokedexEntries = result.data?.first ?: emptyList()
+                    val pokedexEntries = result.data?.first.orEmpty()
                     curPage++
                     loadError.value = ""
                     isLoading.value = false
