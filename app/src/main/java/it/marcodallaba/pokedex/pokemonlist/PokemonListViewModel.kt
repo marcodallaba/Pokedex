@@ -80,7 +80,6 @@ class PokemonListViewModel @Inject constructor(
                 }
 
                 is Resource.Loading -> {
-
                 }
             }
         }

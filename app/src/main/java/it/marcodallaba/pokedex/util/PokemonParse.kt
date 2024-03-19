@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import it.marcodallaba.pokedex.ui.theme.*
 
 fun parseTypeToColor(typeName: String): Color {
-    return when(typeName.lowercase()) {
+    return when (typeName.lowercase()) {
         "normal" -> TypeNormal
         "fire" -> TypeFire
         "water" -> TypeWater
@@ -28,7 +28,7 @@ fun parseTypeToColor(typeName: String): Color {
 }
 
 fun parseStatToColor(statName: String): Color {
-    return when(statName.lowercase()) {
+    return when (statName.lowercase()) {
         "hp" -> HPColor
         "attack" -> AtkColor
         "defense" -> DefColor
@@ -40,7 +40,7 @@ fun parseStatToColor(statName: String): Color {
 }
 
 fun parseStatToAbbr(statName: String): String {
-    return when(statName.lowercase()) {
+    return when (statName.lowercase()) {
         "hp" -> "HP"
         "attack" -> "Atk"
         "defense" -> "Def"

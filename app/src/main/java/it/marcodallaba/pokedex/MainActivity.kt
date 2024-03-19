@@ -33,12 +33,17 @@ class MainActivity : ComponentActivity() {
                     composable("pokemon_list_screen") {
                         PokemonListScreen(navController = navController)
                     }
-                    composable("pokemon_detail_screen/{dominantColor}/{pokemonName}",
-                        arguments = listOf(navArgument("dominantColor") {
-                            type = NavType.IntType
-                        }, navArgument("pokemonName") {
-                            type = NavType.StringType
-                        })) {
+                    composable(
+                        "pokemon_detail_screen/{dominantColor}/{pokemonName}",
+                        arguments = listOf(
+                            navArgument("dominantColor") {
+                                type = NavType.IntType
+                            },
+                            navArgument("pokemonName") {
+                                type = NavType.StringType
+                            },
+                        ),
+                    ) {
                         val dominantColor = remember {
                             val color = it.arguments?.getInt("dominantColor")
                             color?.let { Color(it) } ?: Color.White
@@ -49,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         PokemonDetailScreen(
                             dominantColor = dominantColor,
                             pokemonName = pokemonName?.lowercase() ?: "",
-                            navController = navController
+                            navController = navController,
                         )
                     }
                 }
@@ -61,7 +66,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!", modifier = modifier
+        text = "Hello $name!",
+        modifier = modifier,
     )
 }
 

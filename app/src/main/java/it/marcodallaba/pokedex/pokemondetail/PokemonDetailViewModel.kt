@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokemonDetailViewModel @Inject constructor(
-    private val repository: PokemonRepositoryImpl
-): ViewModel() {
+    private val repository: PokemonRepositoryImpl,
+) : ViewModel() {
 
     suspend fun getPokemonInfo(pokemonName: String): Resource<PokemonInfo> {
         return repository.getPokemonInfo(pokemonName)

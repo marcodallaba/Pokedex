@@ -92,3 +92,5 @@ x
 Hnetwork/src/main/java/it/marcodallaba/network/dto/PokemonListResponse.kt,f/6/f69aa5fc468d0dd7f2e8e78fdbc4b06675d29eb3
 ƒ
 Snetwork/src/main/java/it/marcodallaba/network/interceptor/HttpRequestInterceptor.kt,a/c/ac49db4eb0a3756598519188871a41d154807528
+Q
+!data/src/main/AndroidManifest.xml,f/a/fa20ad08e770fe0392ec3df5be8c6bde6c35d607
