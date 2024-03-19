@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.detekt)
     alias(libs.plugins.kotlinter)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -66,11 +68,20 @@ detekt {
 }
 
 dependencies {
+    implementation(project(":data"))
+    implementation(project(":model"))
 
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.palette.ktx)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.hiltNavigationCompose)
+    implementation(libs.androidx.navigation.navigationCompose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.coil.core)
+    implementation(libs.coil.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
