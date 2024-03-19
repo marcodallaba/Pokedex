@@ -53,10 +53,13 @@ import coil.compose.SubcomposeAsyncImage
 import it.marcodallaba.data.util.Result
 import it.marcodallaba.model.PokemonInfo
 import it.marcodallaba.pokedex.R
+import it.marcodallaba.pokedex.ui.theme.Matterhorn
 import it.marcodallaba.pokedex.util.parseStatToAbbr
 import it.marcodallaba.pokedex.util.parseStatToColor
 import it.marcodallaba.pokedex.util.parseTypeToColor
 import kotlin.math.round
+
+private const val PokemonDetailTopSectionFillMaxHeightFraction = 0.2f
 
 @Composable
 fun PokemonDetailScreen(
@@ -80,7 +83,7 @@ fun PokemonDetailScreen(
             navController = navController,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.2f)
+                .fillMaxHeight(PokemonDetailTopSectionFillMaxHeightFraction)
                 .align(Alignment.TopCenter),
         )
         PokemonDetailStateWrapper(
@@ -339,7 +342,7 @@ fun PokemonStat(
             .clip(CircleShape)
             .background(
                 if (isSystemInDarkTheme()) {
-                    Color(0xFF505050)
+                    Matterhorn
                 } else {
                     Color.LightGray
                 },

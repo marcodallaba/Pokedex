@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         }
                         PokemonDetailScreen(
                             dominantColor = dominantColor,
-                            pokemonName = pokemonName?.lowercase() ?: "",
+                            pokemonName = pokemonName?.lowercase().orEmpty(),
                             navController = navController,
                         )
                     }

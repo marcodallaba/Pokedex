@@ -23,12 +23,12 @@ class PokemonListViewModel @Inject constructor(
 
     private var curPage = 0
 
-    var pokemonList = mutableStateOf<List<PokemonListEntry>>(listOf())
+    var pokemonList = mutableStateOf<List<PokemonListEntry>>(emptyList())
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
     var endReached = mutableStateOf(false)
 
-    private var cachedPokemonList = listOf<PokemonListEntry>()
+    private var cachedPokemonList = emptyList<PokemonListEntry>()
     private var isSearchStarting = true
     var isSearching = mutableStateOf(false)
 
