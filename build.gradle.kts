@@ -2,6 +2,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
+    alias(libs.plugins.kover)
     alias(libs.plugins.versionsBenManes)
     alias(libs.plugins.versionCatalogUpdate)
     alias(libs.plugins.android.application) apply false

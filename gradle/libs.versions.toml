@@ -5,16 +5,15 @@ appcompat = "1.6.1"
 coil = "2.6.0"
 composeBom = "2023.08.00"
 coreKtx = "1.12.0"
+detekt = "1.23.1"
 espressoCore = "3.5.1"
-gradlePlugins-detekt = "1.23.1"
-gradlePlugins-kotlinter = "3.16.0"
-gradlePlugins-versionCatalog = "0.7.0"
-gradlePlugins-versionsBenManes = "0.51.0"
 hilt = "2.50"
 hiltNavigationCompose = "1.2.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 kotlin = "1.9.22"
+kotlinter = "3.16.0"
+kover = "0.7.6"
 ksp = "1.9.22-1.0.17"
 lifecycleRuntimeKtx = "2.7.0"
 material = "1.11.0"
@@ -23,6 +22,8 @@ okHttp = "4.12.0"
 paletteKtx = "1.0.0"
 retrofit = "2.9.0"
 timber = "5.0.1"
+versionCatalog = "0.7.0"
+versionsBenManes = "0.51.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -58,10 +59,11 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "gradlePlugins-detekt" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 hilt-plugin = { id = "dagger.hilt.android.plugin", version.ref = "hilt" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlinter = { id = "org.jmailen.kotlinter", version.ref = "gradlePlugins-kotlinter" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "gradlePlugins-versionCatalog" }
-versionsBenManes = { id = "com.github.ben-manes.versions", version.ref = "gradlePlugins-versionsBenManes" }
+versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalog" }
+versionsBenManes = { id = "com.github.ben-manes.versions", version.ref = "versionsBenManes" }
