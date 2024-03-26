@@ -59,7 +59,7 @@ import it.marcodallaba.pokedex.util.parseStatToColor
 import it.marcodallaba.pokedex.util.parseTypeToColor
 import kotlin.math.round
 
-private const val PokemonDetailTopSectionFillMaxHeightFraction = 0.2f
+private const val POKEMON_DETAIL_TOP_SECTION_FILL_MAX_HEIGHT_FRACTION = 0.2f
 
 @Composable
 fun PokemonDetailScreen(
@@ -83,7 +83,7 @@ fun PokemonDetailScreen(
             navController = navController,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(PokemonDetailTopSectionFillMaxHeightFraction)
+                .fillMaxHeight(POKEMON_DETAIL_TOP_SECTION_FILL_MAX_HEIGHT_FRACTION)
                 .align(Alignment.TopCenter),
         )
         PokemonDetailStateWrapper(
