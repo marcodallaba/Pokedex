@@ -3,7 +3,6 @@ package it.marcodallaba.pokedex.pokemonlist
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -35,9 +34,6 @@ class PokemonListViewModel @Inject constructor(
             savedStateHandle[QUERY] = DEFAULT_QUERY
         }
     }
-
-    var loadError = mutableStateOf("")
-    var isLoading = mutableStateOf(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pokemonListFlow = savedStateHandle.getLiveData<String>(QUERY)
