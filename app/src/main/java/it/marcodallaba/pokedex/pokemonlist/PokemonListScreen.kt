@@ -77,7 +77,7 @@ fun PokemonListScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
             ) {
-                viewModel.searchPokemonList(it)
+                viewModel.search(it)
             }
             Spacer(modifier = Modifier.height(16.dp))
             PokemonList(navController = navController)
@@ -133,11 +133,10 @@ fun PokemonList(
     viewModel: PokemonListViewModel = hiltViewModel(),
 ) {
 
-    val pokemonList: LazyPagingItems<PokemonListEntry> = viewModel.pokemonListFlow.collectAsLazyPagingItems()
-    val endReached by remember { viewModel.endReached }
+    val pokemonList: LazyPagingItems<PokemonListEntry> =
+        viewModel.pokemonListFlow.collectAsLazyPagingItems()
     val loadError by remember { viewModel.loadError }
     val isLoading by remember { viewModel.isLoading }
-    val isSearching by remember { viewModel.isSearching }
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         val itemCount = if (pokemonList.itemCount % 2 == 0) {

@@ -5,61 +5,62 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.marcodallaba.data.repository.PokemonRepository
-import it.marcodallaba.model.PokemonListEntry
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var curPage = 0
+    companion object {
+        const val QUERY = "query"
+        const val DEFAULT_QUERY = ""
+    }
 
-    var pokemonList = mutableStateOf<List<PokemonListEntry>>(emptyList())
+    init {
+        if (!savedStateHandle.contains(QUERY)) {
+            savedStateHandle[QUERY] = DEFAULT_QUERY
+        }
+    }
+
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
-    var endReached = mutableStateOf(false)
 
-    val pokemonListFlow = repository.getPokemonListEntry(0)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pokemonListFlow = savedStateHandle.getLiveData<String>(QUERY)
+        .asFlow()
+        .flatMapLatest { query ->
+            repository.getPokemonListEntry(0).map {
+                it.filter { pokemonListEntry ->
+                    pokemonListEntry.name.contains(query.trim(), ignoreCase = true) ||
+                            pokemonListEntry.number == query.trim()
+                }
+            }
+        }
         // cachedIn() shares the paging state across multiple consumers of posts,
         // e.g. different generations of UI across rotation config change
         .cachedIn(viewModelScope)
 
-    private var cachedPokemonList = emptyList<PokemonListEntry>()
-    private var isSearchStarting = true
-    var isSearching = mutableStateOf(false)
+    fun search(query: String) {
+        if (!shouldShowQuery(query)) return
+        savedStateHandle[QUERY] = query
+    }
 
-    fun searchPokemonList(query: String) {
-        val listToSearch = if (isSearchStarting) {
-            pokemonList.value
-        } else {
-            cachedPokemonList
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            if (query.isEmpty()) {
-                pokemonList.value = cachedPokemonList
-                isSearching.value = false
-                isSearchStarting = true
-                return@launch
-            }
-            val results = listToSearch.filter {
-                it.name.contains(query.trim(), ignoreCase = true) ||
-                    it.number == query.trim()
-            }
-            if (isSearchStarting) {
-                cachedPokemonList = pokemonList.value
-                isSearchStarting = false
-            }
-            pokemonList.value = results
-        }
+    private fun shouldShowQuery(query: String): Boolean {
+        return savedStateHandle.get<String>(QUERY) != query
     }
 
     fun calcDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
