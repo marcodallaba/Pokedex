@@ -49,3 +49,28 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+val excludedFromCoverage = listOf(
+    "dagger.hilt.*",
+    "hilt_aggregated_deps.*",
+    "*_Factory",
+    "*_Factory\$*",
+    "*_*Factory",
+    "*_*Factory\$*",
+    "*.Hilt_*",
+    "*_HiltModules",
+    "*_HiltModules\$*",
+    "*HiltWrapper_*",
+    "*_Impl",
+    "*_Impl\$*",
+    "*.NetworkModule",
+)
+
+koverReport {
+    filters {
+        excludes {
+            // exclusion rules - classes to exclude from report
+            classes(excludedFromCoverage)
+        }
+    }
+}
