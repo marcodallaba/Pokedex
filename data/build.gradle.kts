@@ -37,11 +37,12 @@ android {
 dependencies {
     implementation(project(":network"))
     implementation(project(":model"))
-    implementation(libs.hilt.android)
     implementation(project(":common"))
+    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     api(libs.androidx.paging.runtime)
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
