@@ -8,18 +8,14 @@ class PokedexClient @Inject constructor(
   private val pokedexApi: PokeApi,
 ) {
 
-  suspend fun fetchPokemonList(page: Int): PokemonListResponse =
+  suspend fun fetchPokemonList(page: Int, pageSize: Int): PokemonListResponse =
     pokedexApi.getPokemonList(
-      limit = PAGING_SIZE,
-      offset = page * PAGING_SIZE,
+      limit = pageSize,
+      offset = page * pageSize,
     )
 
   suspend fun fetchPokemonInfo(name: String): PokemonInfoResponse =
     pokedexApi.getPokemonInfo(
       name = name,
     )
-
-  companion object {
-    private const val PAGING_SIZE = 20
-  }
 }

@@ -7,10 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.marcodallaba.data.repository.PokemonRepository
-import it.marcodallaba.data.util.Result
 import it.marcodallaba.model.PokemonListEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,13 +28,14 @@ class PokemonListViewModel @Inject constructor(
     var isLoading = mutableStateOf(false)
     var endReached = mutableStateOf(false)
 
+    val pokemonListFlow = repository.getPokemonListEntry(0)
+        // cachedIn() shares the paging state across multiple consumers of posts,
+        // e.g. different generations of UI across rotation config change
+        .cachedIn(viewModelScope)
+
     private var cachedPokemonList = emptyList<PokemonListEntry>()
     private var isSearchStarting = true
     var isSearching = mutableStateOf(false)
-
-    init {
-        loadPokemonPaginated()
-    }
 
     fun searchPokemonList(query: String) {
         val listToSearch = if (isSearchStarting) {
@@ -58,30 +59,6 @@ class PokemonListViewModel @Inject constructor(
                 isSearchStarting = false
             }
             pokemonList.value = results
-        }
-    }
-
-    fun loadPokemonPaginated() {
-        viewModelScope.launch {
-            isLoading.value = true
-            when (val result = repository.getPokemonListEntry(curPage)) {
-                is Result.Success -> {
-                    endReached.value = result.data.second
-                    val pokedexEntries = result.data.first
-                    curPage++
-                    loadError.value = ""
-                    isLoading.value = false
-                    pokemonList.value += pokedexEntries
-                }
-
-                is Result.Error -> {
-                    loadError.value = result.exception.localizedMessage.orEmpty()
-                    isLoading.value = false
-                }
-
-                is Result.Loading -> {
-                }
-            }
         }
     }
 

@@ -40,7 +40,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(project(":common"))
     ksp(libs.hilt.compiler)
-
+    api(libs.androidx.paging.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

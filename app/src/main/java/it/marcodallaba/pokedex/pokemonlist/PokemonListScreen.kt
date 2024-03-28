@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import it.marcodallaba.model.PokemonListEntry
@@ -130,22 +132,20 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonListViewModel = hiltViewModel(),
 ) {
-    val pokemonList by remember { viewModel.pokemonList }
+
+    val pokemonList: LazyPagingItems<PokemonListEntry> = viewModel.pokemonListFlow.collectAsLazyPagingItems()
     val endReached by remember { viewModel.endReached }
     val loadError by remember { viewModel.loadError }
     val isLoading by remember { viewModel.isLoading }
     val isSearching by remember { viewModel.isSearching }
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        val itemCount = if (pokemonList.size % 2 == 0) {
-            pokemonList.size / 2
+        val itemCount = if (pokemonList.itemCount % 2 == 0) {
+            pokemonList.itemCount / 2
         } else {
-            pokemonList.size / 2 + 1
+            pokemonList.itemCount / 2 + 1
         }
         items(itemCount) {
-            if (it >= itemCount - 1 && !endReached && !isLoading && !isSearching) {
-                viewModel.loadPokemonPaginated()
-            }
             PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
         }
     }
@@ -159,7 +159,7 @@ fun PokemonList(
         }
         if (loadError.isNotEmpty()) {
             RetrySection(error = loadError) {
-                viewModel.loadPokemonPaginated()
+                //viewModel.loadPokemonPaginated()
             }
         }
     }
@@ -225,23 +225,27 @@ fun PokedexEntry(
 @Composable
 fun PokedexRow(
     rowIndex: Int,
-    entries: List<PokemonListEntry>,
+    entries: LazyPagingItems<PokemonListEntry>,
     navController: NavController,
 ) {
     Column {
         Row {
-            PokedexEntry(
-                entry = entries[rowIndex * 2],
-                navController = navController,
-                modifier = Modifier.weight(1f),
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            if (entries.size >= rowIndex * 2 + 2) {
+            entries[rowIndex * 2]?.let {
                 PokedexEntry(
-                    entry = entries[rowIndex * 2 + 1],
+                    entry = it,
                     navController = navController,
                     modifier = Modifier.weight(1f),
                 )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            if (entries.itemCount >= rowIndex * 2 + 2) {
+                entries[rowIndex * 2 + 1]?.let {
+                    PokedexEntry(
+                        entry = it,
+                        navController = navController,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
             } else {
                 Spacer(modifier = Modifier.weight(1f))
             }
