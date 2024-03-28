@@ -3,6 +3,7 @@ package it.marcodallaba.pokedex.pokemonlist
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +24,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -40,12 +44,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
@@ -135,8 +142,6 @@ fun PokemonList(
 
     val pokemonList: LazyPagingItems<PokemonListEntry> =
         viewModel.pokemonListFlow.collectAsLazyPagingItems()
-    val loadError by remember { viewModel.loadError }
-    val isLoading by remember { viewModel.isLoading }
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         val itemCount = if (pokemonList.itemCount % 2 == 0) {
@@ -147,18 +152,35 @@ fun PokemonList(
         items(itemCount) {
             PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
         }
-    }
+        pokemonList.apply {
+            when {
+                loadState.refresh is LoadState.Loading -> {
+                    item { PageLoader(modifier = Modifier.fillParentMaxSize()) }
+                }
 
-    Box(
-        contentAlignment = Center,
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        }
-        if (loadError.isNotEmpty()) {
-            RetrySection(error = loadError) {
-                //viewModel.loadPokemonPaginated()
+                loadState.refresh is LoadState.Error -> {
+                    val error = pokemonList.loadState.refresh as LoadState.Error
+                    item {
+                        ErrorMessage(
+                            modifier = Modifier.fillParentMaxSize(),
+                            message = error.error.localizedMessage!!,
+                            onClickRetry = { retry() })
+                    }
+                }
+
+                loadState.append is LoadState.Loading -> {
+                    item { LoadingNextPageItem(modifier = Modifier) }
+                }
+
+                loadState.append is LoadState.Error -> {
+                    val error = pokemonList.loadState.append as LoadState.Error
+                    item {
+                        ErrorMessage(
+                            modifier = Modifier,
+                            message = error.error.localizedMessage!!,
+                            onClickRetry = { retry() })
+                    }
+                }
             }
         }
     }
@@ -254,18 +276,51 @@ fun PokedexRow(
 }
 
 @Composable
-fun RetrySection(
-    error: String,
-    onRetry: () -> Unit,
+fun ErrorMessage(
+    message: String,
+    modifier: Modifier = Modifier,
+    onClickRetry: () -> Unit
 ) {
-    Column {
-        Text(error, color = Color.Red, fontSize = 18.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { onRetry() },
-            modifier = Modifier.align(CenterHorizontally),
-        ) {
-            Text(text = "Retry")
+    Row(
+        modifier = modifier.padding(10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = message,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.weight(1f),
+            maxLines = 2
+        )
+        OutlinedButton(onClick = onClickRetry) {
+            Text(text = stringResource(id = R.string.retry))
         }
     }
+}
+
+@Composable
+fun PageLoader(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.fetching_data_from_server),
+            color = MaterialTheme.colorScheme.primary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        CircularProgressIndicator(Modifier.padding(top = 10.dp))
+    }
+}
+
+@Composable
+fun LoadingNextPageItem(modifier: Modifier) {
+    CircularProgressIndicator(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .wrapContentWidth(CenterHorizontally)
+    )
 }

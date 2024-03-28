@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pokedex</string>
+    <string name="retry">Retry</string>
+    <string name="fetching_data_from_server">Fetching data from server</string>
 </resources>
