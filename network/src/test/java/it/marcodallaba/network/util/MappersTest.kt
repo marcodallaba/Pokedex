@@ -1,7 +1,9 @@
 package it.marcodallaba.network.util
 
+import com.google.gson.Gson
 import it.marcodallaba.network.dto.PokemonListResponse
 import it.marcodallaba.network.dto.Result
+import it.marcodallaba.network.json.page1Json
 import org.junit.Assert.assertEquals
 
 import org.junit.Test
@@ -10,24 +12,14 @@ class MappersKtTest {
     @Test
     fun `test PokemonListResponse toModel`() {
         // Create a sample PokemonListResponse
-        val response = PokemonListResponse(
-            count = 2,
-            next = null,
-            previous = null,
-            results = listOf(
-                Result(
-                    "bulbasaur",
-                    "https://pokeapi.co/api/v2/pokemon/1/"
-                ),
-                Result("charmander", "https://pokeapi.co/api/v2/pokemon/4/")
-            )
-        )
+        val gson = Gson()
+        val response = gson.fromJson(page1Json, PokemonListResponse::class.java)
 
         // Call the function to be tested
         val result = response.toModel()
 
         // Assert the result
-        assertEquals(2, result.size)
+        assertEquals(20, result.size)
 
         val bulbasaurImageUrl =
             "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
@@ -39,8 +31,8 @@ class MappersKtTest {
         val charmanderImageUrl =
             "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
         // Assert for PokemonListEntry 2
-        assertEquals("charmander", result[1].name)
-        assertEquals(charmanderImageUrl, result[1].imageUrl)
-        assertEquals("4", result[1].number)
+        assertEquals("charmander", result[3].name)
+        assertEquals(charmanderImageUrl, result[3].imageUrl)
+        assertEquals("4", result[3].number)
     }
 }
