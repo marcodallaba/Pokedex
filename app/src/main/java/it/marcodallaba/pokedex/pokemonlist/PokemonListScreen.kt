@@ -138,7 +138,6 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonListViewModel = hiltViewModel(),
 ) {
-
     val pokemonList: LazyPagingItems<PokemonListEntry> =
         viewModel.pokemonListFlow.collectAsLazyPagingItems()
 
@@ -163,7 +162,8 @@ fun PokemonList(
                         ErrorMessage(
                             modifier = Modifier.fillParentMaxSize(),
                             message = error.error.localizedMessage!!,
-                            onClickRetry = { retry() })
+                            onClickRetry = { retry() },
+                        )
                     }
                 }
 
@@ -177,7 +177,8 @@ fun PokemonList(
                         ErrorMessage(
                             modifier = Modifier,
                             message = error.error.localizedMessage!!,
-                            onClickRetry = { retry() })
+                            onClickRetry = { retry() },
+                        )
                     }
                 }
             }
@@ -278,18 +279,18 @@ fun PokedexRow(
 fun ErrorMessage(
     message: String,
     modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
+    onClickRetry: () -> Unit,
 ) {
     Row(
         modifier = modifier.padding(10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = message,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.weight(1f),
-            maxLines = 2
+            maxLines = 2,
         )
         OutlinedButton(onClick = onClickRetry) {
             Text(text = stringResource(id = R.string.retry))
@@ -302,13 +303,13 @@ fun PageLoader(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = CenterHorizontally
+        horizontalAlignment = CenterHorizontally,
     ) {
         Text(
             text = stringResource(id = R.string.fetching_data_from_server),
             color = MaterialTheme.colorScheme.primary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
         CircularProgressIndicator(Modifier.padding(top = 10.dp))
     }
@@ -320,6 +321,6 @@ fun LoadingNextPageItem(modifier: Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .wrapContentWidth(CenterHorizontally)
+            .wrapContentWidth(CenterHorizontally),
     )
 }

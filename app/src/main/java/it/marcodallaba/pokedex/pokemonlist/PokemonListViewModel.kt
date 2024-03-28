@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     companion object {
@@ -42,7 +42,7 @@ class PokemonListViewModel @Inject constructor(
             repository.getPokemonListEntry(0).map {
                 it.filter { pokemonListEntry ->
                     pokemonListEntry.name.contains(query.trim(), ignoreCase = true) ||
-                            pokemonListEntry.number == query.trim()
+                        pokemonListEntry.number == query.trim()
                 }
             }
         }
