@@ -55,9 +55,8 @@ class PokemonListViewModel @Inject constructor(
         savedStateHandle[QUERY] = query
     }
 
-    private fun shouldShowQuery(query: String): Boolean {
-        return savedStateHandle.get<String>(QUERY) != query
-    }
+    private fun shouldShowQuery(query: String): Boolean =
+        savedStateHandle.get<String>(QUERY) != query
 
     fun calcDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
         val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)

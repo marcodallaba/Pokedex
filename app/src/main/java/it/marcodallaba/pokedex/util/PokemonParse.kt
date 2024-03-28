@@ -26,6 +26,7 @@ import it.marcodallaba.pokedex.ui.theme.TypeRock
 import it.marcodallaba.pokedex.ui.theme.TypeSteel
 import it.marcodallaba.pokedex.ui.theme.TypeWater
 
+@Suppress("CyclomaticComplexMethod")
 fun parseTypeToColor(typeName: String): Color {
     return when (typeName.lowercase()) {
         "normal" -> TypeNormal
