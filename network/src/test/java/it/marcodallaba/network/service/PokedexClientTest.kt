@@ -6,6 +6,7 @@ import it.marcodallaba.network.dto.PokemonListResponse
 import it.marcodallaba.network.json.page1Json
 import it.marcodallaba.network.json.pikachuJson
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -27,35 +28,31 @@ class PokedexClientTest {
     }
 
     @Test
-    fun testFetchPokemonList() {
+    fun testFetchPokemonList() = runTest {
         val page = 1
         val pageSize = 20
         val gson = Gson()
         val expectedResponse = gson.fromJson(page1Json, PokemonListResponse::class.java)
 
-        runBlocking {
-            `when`(mockPokedexApi.getPokemonList(limit = pageSize, offset = page * pageSize))
-                .thenReturn(expectedResponse)
+        `when`(mockPokedexApi.getPokemonList(limit = pageSize, offset = page * pageSize))
+            .thenReturn(expectedResponse)
 
-            val actualResponse = pokedexClient.fetchPokemonList(page, pageSize)
+        val actualResponse = pokedexClient.fetchPokemonList(page, pageSize)
 
-            assertEquals(expectedResponse, actualResponse)
-        }
+        assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
-    fun testFetchPokemonInfo() {
+    fun testFetchPokemonInfo() = runTest {
         val pokemonName = "pikachu"
         val gson = Gson()
         val expectedResponse = gson.fromJson(pikachuJson, PokemonInfoResponse::class.java)
 
-        runBlocking {
-            `when`(mockPokedexApi.getPokemonInfo(name = pokemonName))
-                .thenReturn(expectedResponse)
+        `when`(mockPokedexApi.getPokemonInfo(name = pokemonName))
+            .thenReturn(expectedResponse)
 
-            val actualResponse = pokedexClient.fetchPokemonInfo(pokemonName)
+        val actualResponse = pokedexClient.fetchPokemonInfo(pokemonName)
 
-            assertEquals(expectedResponse, actualResponse)
-        }
+        assertEquals(expectedResponse, actualResponse)
     }
 }
