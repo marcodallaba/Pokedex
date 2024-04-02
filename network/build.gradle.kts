@@ -38,7 +38,7 @@ dependencies {
     implementation(project(":model"))
 
     implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
+    api(libs.retrofit.gson)
     implementation(libs.okhttp.interceptor)
 
     implementation(libs.hilt.android)
